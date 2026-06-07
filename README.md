@@ -468,3 +468,9 @@ It guarantees the sentiment value is always consistent with the rating — no po
 ---
 
 *EchoBoard — built for clarity, runs on nothing but PHP.*
+
+---
+
+## Author
+
+Developed as an academic project to demonstrate desktop application development using JavaFX and modern Java technologies.
