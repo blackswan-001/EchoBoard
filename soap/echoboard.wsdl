@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="EchoBoardService"
+             targetNamespace="http://echoboard.local/soap"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://echoboard.local/soap"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <!-- ── Types ── -->
+  <types>
+    <xsd:schema targetNamespace="http://echoboard.local/soap">
+
+      <xsd:element name="GetSummaryRequest">
+        <xsd:complexType><xsd:sequence/></xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetSummaryResponse">
+        <xsd:complexType><xsd:sequence>
+          <xsd:element name="totalFeedback"  type="xsd:integer"/>
+          <xsd:element name="averageRating"  type="xsd:decimal"/>
+          <xsd:element name="positiveCount"  type="xsd:integer"/>
+          <xsd:element name="neutralCount"   type="xsd:integer"/>
+          <xsd:element name="negativeCount"  type="xsd:integer"/>
+          <xsd:element name="generatedAt"    type="xsd:dateTime"/>
+        </xsd:sequence></xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="GetFeedbackListRequest">
+        <xsd:complexType><xsd:sequence>
+          <xsd:element name="limit" type="xsd:integer" minOccurs="0"/>
+        </xsd:sequence></xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetFeedbackListResponse">
+        <xsd:complexType><xsd:sequence>
+          <xsd:element name="feedbackList" type="tns:FeedbackList"/>
+        </xsd:sequence></xsd:complexType>
+      </xsd:element>
+
+      <xsd:complexType name="FeedbackList">
+        <xsd:sequence>
+          <xsd:element name="item" type="tns:FeedbackItem" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="FeedbackItem">
+        <xsd:sequence>
+          <xsd:element name="id"        type="xsd:integer"/>
+          <xsd:element name="name"      type="xsd:string"/>
+          <xsd:element name="category"  type="xsd:string"/>
+          <xsd:element name="rating"    type="xsd:integer"/>
+          <xsd:element name="sentiment" type="xsd:string"/>
+          <xsd:element name="message"   type="xsd:string"/>
+          <xsd:element name="createdAt" type="xsd:dateTime"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:element name="GetCategorySummaryRequest">
+        <xsd:complexType><xsd:sequence/></xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GetCategorySummaryResponse">
+        <xsd:complexType><xsd:sequence>
+          <xsd:element name="categories" type="tns:CategoryList"/>
+        </xsd:sequence></xsd:complexType>
+      </xsd:element>
+
+      <xsd:complexType name="CategoryList">
+        <xsd:sequence>
+          <xsd:element name="category" type="tns:CategoryItem" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+      <xsd:complexType name="CategoryItem">
+        <xsd:sequence>
+          <xsd:element name="name"      type="xsd:string"/>
+          <xsd:element name="count"     type="xsd:integer"/>
+          <xsd:element name="avgRating" type="xsd:decimal"/>
+          <xsd:element name="positive"  type="xsd:integer"/>
+          <xsd:element name="negative"  type="xsd:integer"/>
+        </xsd:sequence>
+      </xsd:complexType>
+
+    </xsd:schema>
+  </types>
+
+  <!-- ── Messages ── -->
+  <message name="GetSummaryIn">     <part name="params" element="tns:GetSummaryRequest"/>          </message>
+  <message name="GetSummaryOut">    <part name="params" element="tns:GetSummaryResponse"/>         </message>
+  <message name="GetFeedbackListIn">  <part name="params" element="tns:GetFeedbackListRequest"/>   </message>
+  <message name="GetFeedbackListOut"> <part name="params" element="tns:GetFeedbackListResponse"/>  </message>
+  <message name="GetCategorySummaryIn">  <part name="params" element="tns:GetCategorySummaryRequest"/>  </message>
+  <message name="GetCategorySummaryOut"> <part name="params" element="tns:GetCategorySummaryResponse"/> </message>
+
+  <!-- ── Port Type ── -->
+  <portType name="EchoBoardPortType">
+    <operation name="GetSummary">
+      <input  message="tns:GetSummaryIn"/>
+      <output message="tns:GetSummaryOut"/>
+    </operation>
+    <operation name="GetFeedbackList">
+      <input  message="tns:GetFeedbackListIn"/>
+      <output message="tns:GetFeedbackListOut"/>
+    </operation>
+    <operation name="GetCategorySummary">
+      <input  message="tns:GetCategorySummaryIn"/>
+      <output message="tns:GetCategorySummaryOut"/>
+    </operation>
+  </portType>
+
+  <!-- ── Binding ── -->
+  <binding name="EchoBoardBinding" type="tns:EchoBoardPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="GetSummary">
+      <soap:operation soapAction="http://echoboard.local/soap/GetSummary"/>
+      <input><soap:body use="literal"/></input>
+      <output><soap:body use="literal"/></output>
+    </operation>
+    <operation name="GetFeedbackList">
+      <soap:operation soapAction="http://echoboard.local/soap/GetFeedbackList"/>
+      <input><soap:body use="literal"/></input>
+      <output><soap:body use="literal"/></output>
+    </operation>
+    <operation name="GetCategorySummary">
+      <soap:operation soapAction="http://echoboard.local/soap/GetCategorySummary"/>
+      <input><soap:body use="literal"/></input>
+      <output><soap:body use="literal"/></output>
+    </operation>
+  </binding>
+
+  <!-- ── Service ── -->
+  <service name="EchoBoardService">
+    <port name="EchoBoardPort" binding="tns:EchoBoardBinding">
+      <soap:address location="http://localhost:8000/soap/service.php"/>
+    </port>
+  </service>
+
+</definitions>
